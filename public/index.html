@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>EUPL License Generator</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                    Roboto, sans-serif;
+                background: #2a2a2a;
+                min-height: 100vh;
+                padding: 20px;
+                padding-top: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .topbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 40px;
+                background: #2a2a2a;
+                display: flex;
+                align-items: center;
+                padding: 0 20px;
+                z-index: 1000;
+            }
+
+            .topbar a {
+                color: white;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+            .topbar a:hover {
+                text-decoration: underline;
+            }
+
+            .container {
+                max-width: 800px;
+                width: 100%;
+                background: rgb(29, 29, 29);
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                overflow: hidden;
+            }
+
+            .header {
+                background: rgb(29, 29, 29);
+                color: white;
+                padding: 30px;
+                text-align: center;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .header h1 {
+                font-size: 2.5em;
+                margin-bottom: 10px;
+                font-weight: 700;
+            }
+
+            .header p {
+                font-size: 1.1em;
+                opacity: 0.9;
+            }
+
+            code {
+                background: rgb(23, 25, 26);
+                border: 1px solid rgb(34, 34, 34);
+                border-radius: 4px;
+                padding: 3px 6px;
+                font-size: 0.9rem;
+                font-family: Consolas, monaco, "Ubuntu Mono", "Liberation Mono",
+                    "Courier New", Courier, monospace;
+                user-select: all;
+            }
+
+            code::selection {
+                background: rgb(255, 0, 255);
+                color: rgb(255, 255, 255);
+            }
+
+            .form-section {
+                padding: 30px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: 600;
+                color: #ffffff;
+            }
+
+            label .required {
+                color: #ff0000;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            select {
+                width: 100%;
+                padding: 12px;
+                border: 2px solid #e0e0e0;
+                border-radius: 6px;
+                font-size: 16px;
+                transition: border-color 0.3s;
+            }
+
+            input[type="text"]:focus,
+            input[type="email"]:focus,
+            select:focus {
+                outline: none;
+                border-color: #3498db;
+            }
+
+            .form-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .help-text {
+                font-size: 0.9em;
+                color: #d1d1d1;
+                margin-top: 5px;
+            }
+
+            .generate-btn {
+                width: 100%;
+                padding: 15px;
+                background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+                color: white;
+                border: none;
+                border-radius: 6px;
+                font-size: 18px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            .generate-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+            }
+
+            .generate-btn:active {
+                transform: translateY(0);
+            }
+
+            .footer {
+                color: #ffffff;
+            }
+
+            .results {
+                margin-top: 30px;
+                padding: 20px;
+                background: rgb(15, 15, 15);
+                border-radius: 8px;
+                border: 0px;
+            }
+
+            .results h3 {
+                color: #ffffff;
+                margin-bottom: 15px;
+            }
+
+            .url-group {
+                margin-bottom: 15px;
+            }
+
+            .url-group label {
+                font-size: 0.9em;
+                color: #ffffff;
+                margin-bottom: 5px;
+            }
+
+            .url-input {
+                display: flex;
+                gap: 10px;
+            }
+
+            .url-input input {
+                flex: 1;
+                padding: 8px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-family: monospace;
+                font-size: 14px;
+            }
+
+            .copy-btn {
+                padding: 8px 12px;
+                background: #3498db;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                transition: background 0.2s;
+            }
+
+            .copy-btn:hover {
+                background: #2980b9;
+            }
+
+            .open-btn {
+                padding: 8px 12px;
+                background: #3498db;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 12px;
+                transition: background 0.2s;
+            }
+
+            .open-btn:hover {
+                background: #2980b9;
+            }
+
+            .copy-btn.copied {
+                background: #27ae60;
+            }
+
+            .warning {
+                background: #fff3cd;
+                border: 1px solid #ffeaa7;
+                padding: 15px;
+                border-radius: 6px;
+                margin-bottom: 20px;
+            }
+
+            .warning h4 {
+                color: #000000;
+                margin-bottom: 10px;
+            }
+
+            .warning p {
+                color: #000000;
+                margin-bottom: 5px;
+            }
+
+            .notes h2 {
+                color: #ffffff;
+                margin-bottom: 7px;
+            }
+            .notes p {
+                color: #ffffff;
+                margin-bottom: 10px;
+            }
+            .notes p a img {
+                vertical-align: middle;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            /* Dropdown table styles */
+            .license-table {
+                background-color: #303030;
+                color: white;
+                border-radius: 8px;
+                overflow: hidden;
+                max-width: 800px;
+                margin: 0 auto;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .table-toggle {
+                background-color: #222222;
+                padding: 20px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                transition: background-color 0.3s ease;
+                border: none;
+                width: 100%;
+                color: white;
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            .table-toggle:hover {
+                background-color: #333333;
+            }
+
+            .table-toggle .toggle-icon {
+                font-size: 20px;
+                transition: transform 0.3s ease;
+            }
+
+            .table-toggle.expanded .toggle-icon {
+                transform: rotate(180deg);
+            }
+
+            .table-content {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease-out;
+            }
+
+            .table-content.expanded {
+                max-height: 800px; /* Adjust based on your content */
+            }
+
+            .table-header {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                background-color: #2a2a2a;
+            }
+
+            .header-cell {
+                padding: 20px;
+                text-align: center;
+                font-weight: bold;
+                font-size: 16px;
+                border-right: 1px solid #383838;
+            }
+
+            .header-cell:last-child {
+                border-right: none;
+            }
+
+            .table-body {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                min-height: 200px;
+            }
+
+            .column {
+                padding: 20px;
+                border-right: 1px solid #383838;
+            }
+
+            .column:last-child {
+                border-right: none;
+            }
+
+            .column ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .column li {
+                margin-bottom: 12px;
+                padding-left: 20px;
+                position: relative;
+                line-height: 1.4;
+            }
+
+            .column li:before {
+                content: "▪";
+                color: #db34c5;
+                position: absolute;
+                left: 0;
+                font-size: 16px;
+            }
+
+            @media (max-width: 768px) {
+                body {
+                    align-items: flex-start;
+                    padding: 10px;
+                    padding-top: 60px;
+                }
+
+                .form-row {
+                    grid-template-columns: 1fr;
+                }
+
+                .url-input {
+                    flex-direction: column;
+                }
+
+                .header h1 {
+                    font-size: 2em;
+                }
+
+                .table-header,
+                .table-body {
+                    grid-template-columns: 1fr;
+                }
+
+                .header-cell,
+                .column {
+                    border-right: none;
+                    border-bottom: 1px solid #383838;
+                }
+
+                .header-cell:last-child,
+                .column:last-child {
+                    border-bottom: none;
+                }
+
+                .table-toggle {
+                    font-size: 16px;
+                    padding: 15px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!--Hi code-reader! Feel free to read through and learn from the content of this page!-->
+        <!--If you want to see the backend code as well, see https://github.com/ItsThatOneJack-Dev/MuPL-->
+        <div class="topbar">
+            <a href="https://itoj.dev">ItsThatOneJack</a>
+        </div>
+
+        <div class="container">
+            <div class="header">
+                <h1>MuPL License Generator</h1>
+                <p>
+                    Generate a custom MuPL (Moral Use Public License) text, in
+                    various formats!
+                </p>
+            </div>
+
+            <div class="form-section">
+                <div class="warning">
+                    <h4>Important License Restrictions</h4>
+                    <p>
+                        • Organizations with >50:1 pay ratio between
+                        highest/lowest paid employees may not use MuPL licensed
+                        software.
+                    </p>
+                    <p>
+                        • Companies with >1,000 employees globally (including
+                        contractors) may not use MuPL licensed software.
+                    </p>
+                    <p>
+                        • Military organizations and defense contractors may not
+                        use MuPL licensed software.
+                    </p>
+                    <p>
+                        • Network use counts as distribution, similar to the
+                        AGPL.
+                    </p>
+                </div>
+
+                <div class="notes">
+                    <h2>Notes</h2>
+                    <p>
+                        The MuPL does not meet FSF's definition of "free
+                        software" or OSI's definition of "open source".
+                        <br />
+                        The MuPL is not GPL compatible.
+                        <br />
+                        <br />
+                        When using the MuPL, you can use the SPDX license
+                        identifier: <code>LicenseID: LicenseRef-MuPL-1</code>
+                        <br />
+                        Badge:
+                        <a
+                            href="https://mupl.itoj.dev"
+                            rel="noopener"
+                            target="_blank"
+                        >
+                            <img
+                                src="https://badgers.space/badge/License/MuPL?theme=honey&color=pink"
+                            />
+                        </a>
+                        <button
+                            class="copy-btn"
+                            onclick="copyBadge('markdown')"
+                        >
+                            Copy Markdown
+                        </button>
+                        <button class="copy-btn" onclick="copyBadge('html')">
+                            Copy HTML
+                        </button>
+                    </p>
+                </div>
+                <br />
+                <div class="license-table">
+                    <button class="table-toggle" onclick="toggleLicenseTable()">
+                        <span>License Details</span>
+                        <span class="toggle-icon">▼</span>
+                    </button>
+                    <div class="table-content" id="licenseTableContent">
+                        <div class="table-header">
+                            <div class="header-cell">USERS MAY</div>
+                            <div class="header-cell">USERS MUST</div>
+                            <div class="header-cell">USERS CANNOT</div>
+                        </div>
+                        <div class="table-body">
+                            <div class="column">
+                                <ul>
+                                    <li>
+                                        Use MuPL-licensed software privately.
+                                    </li>
+                                    <li>
+                                        Use MuPL-licensed software commercially
+                                        (if eligible).
+                                    </li>
+                                    <li>Modify MuPL-licensed software.</li>
+                                    <li>Distribute MuPL-licensed software.</li>
+                                    <li>
+                                        Offer MuPL-licensed software as a
+                                        service.
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="column">
+                                <ul>
+                                    <li>
+                                        Include license text, or a link to it.
+                                    </li>
+                                    <li>
+                                        Provide source code for any distributed
+                                        copies.
+                                    </li>
+                                    <li>
+                                        Provide source code for the duration
+                                        your modification is available (if as a
+                                        service).
+                                    </li>
+                                    <li>
+                                        License any derivative works under the
+                                        MuPL.
+                                    </li>
+                                    <li>
+                                        Allow their compliance with the MuPL to
+                                        be verified upon request.
+                                    </li>
+                                    <li>
+                                        Provide attribution to the licensor of
+                                        the original work (if a derivative
+                                        work).
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="column">
+                                <ul>
+                                    <li>
+                                        Utilise or modify MuPL-licensed
+                                        software, if they are an organisation
+                                        with over 1000 employees (including
+                                        contractors).
+                                    </li>
+                                    <li>
+                                        Utilise or modify MuPL-licensed
+                                        software, if they are an organisation
+                                        with a ratio of pay between the highest
+                                        and lowest paid employees of over 50:1.
+                                    </li>
+                                    <li>
+                                        Utilise or modify MuPL-licensed
+                                        software, if they are an organisation
+                                        involved in the manufacture of weapons
+                                        systems, or the operation of a military.
+                                    </li>
+                                    <li>
+                                        Combine MuPL-licensed software with any
+                                        software licensed under an incompatible
+                                        license, unless the MuPL-licensed
+                                        software is unmodified when included,
+                                        and remains seperate to the combined
+                                        work throughout compilation or
+                                        interpretation.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <form id="licenseForm">
+                    <div class="form-group">
+                        <label for="name"
+                            >Project Name <span class="required">*</span></label
+                        >
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            required
+                            placeholder="My Awesome Project"
+                        />
+                        <div class="help-text">
+                            The name of your software project
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="holder"
+                                >Copyright Holder
+                                <span class="required">*</span></label
+                            >
+                            <input
+                                type="text"
+                                id="holder"
+                                name="holder"
+                                required
+                                placeholder="John Doe"
+                            />
+                            <div class="help-text">
+                                Person or organisation holding copyright
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="year"
+                                >Year(s) <span class="required">*</span></label
+                            >
+                            <input
+                                type="text"
+                                id="year"
+                                name="year"
+                                required
+                                placeholder="2025"
+                                value="2025"
+                            />
+                            <div class="help-text">
+                                Year or range (e.g., 2023-2025)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact">Contact Information</label>
+                            <input
+                                type="email"
+                                id="contact"
+                                name="contact"
+                                placeholder="contact@example.com"
+                            />
+                            <div class="help-text">
+                                Email for license questions
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="jurisdiction">Jurisdiction</label>
+                            <input
+                                type="text"
+                                id="jurisdiction"
+                                name="jurisdiction"
+                                placeholder="United Kingdom"
+                            />
+                            <div class="help-text">
+                                Legal jurisdiction for the license
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="generate-btn">Generate</button>
+                </form>
+
+                <div id="results" class="results hidden">
+                    <h3>Your License URLs</h3>
+                    <div class="url-group">
+                        <label>HTML Version (for web display):</label>
+                        <div class="url-input">
+                            <input type="text" id="htmlUrl" readonly />
+                            <button
+                                type="button"
+                                class="copy-btn"
+                                onclick="copyToClipboard('htmlUrl', this)"
+                            >
+                                Copy
+                            </button>
+                            <button
+                                type="button"
+                                class="open-btn"
+                                onclick="openLink('htmlUrl', this)"
+                            >
+                                Open
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="url-group">
+                        <label>Markdown Version (for README files):</label>
+                        <div class="url-input">
+                            <input type="text" id="markdownUrl" readonly />
+                            <button
+                                type="button"
+                                class="copy-btn"
+                                onclick="copyToClipboard('markdownUrl', this)"
+                            >
+                                Copy
+                            </button>
+                            <button
+                                type="button"
+                                class="open-btn"
+                                onclick="openLink('markdownUrl', this)"
+                            >
+                                Open
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="url-group">
+                        <label>Plain Text Version:</label>
+                        <div class="url-input">
+                            <input type="text" id="textUrl" readonly />
+                            <button
+                                type="button"
+                                class="copy-btn"
+                                onclick="copyToClipboard('textUrl', this)"
+                            >
+                                Copy
+                            </button>
+                            <button
+                                type="button"
+                                class="open-btn"
+                                onclick="openLink('textUrl', this)"
+                            >
+                                Open
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="url-group">
+                        <label>JSON Version (for API usage):</label>
+                        <div class="url-input">
+                            <input type="text" id="jsonUrl" readonly />
+                            <button
+                                type="button"
+                                class="copy-btn"
+                                onclick="copyToClipboard('jsonUrl', this)"
+                            >
+                                Copy
+                            </button>
+                            <button
+                                type="button"
+                                class="open-btn"
+                                onclick="openLink('jsonUrl', this)"
+                            >
+                                Open
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <p class="footer">
+                    Made with &#x2764;&#xFE0F; by ItsThatOneJack
+                </p>
+                <br />
+                <p class="footer">
+                    I am not a lawyer. Generated content is not intended to be
+                    legal advice. Consult legal counsel before use.
+                </p>
+            </div>
+        </div>
+
+        <script>
+            function toggleLicenseTable() {
+                const content = document.getElementById("licenseTableContent");
+                const toggle = document.querySelector(".table-toggle");
+
+                content.classList.toggle("expanded");
+                toggle.classList.toggle("expanded");
+            }
+
+            document
+                .getElementById("licenseForm")
+                .addEventListener("submit", async function (e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+                    const data = Object.fromEntries(formData);
+                    data.contact = " or contact " + data.contact;
+
+                    try {
+                        const response = await fetch("/generate", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(data),
+                        });
+
+                        if (!response.ok) {
+                            throw new Error("Failed to generate license!");
+                        }
+
+                        const result = await response.json();
+
+                        document.getElementById("htmlUrl").value =
+                            result.formats.html;
+                        document.getElementById("markdownUrl").value =
+                            result.formats.markdown;
+                        document.getElementById("textUrl").value =
+                            result.formats.text;
+                        document.getElementById("jsonUrl").value =
+                            result.formats.json;
+
+                        document
+                            .getElementById("results")
+                            .classList.remove("hidden");
+
+                        document
+                            .getElementById("results")
+                            .scrollIntoView({ behavior: "smooth" });
+                    } catch (error) {
+                        alert("Error generating license: " + error.message);
+                    }
+                });
+
+            function copyToClipboard(elementId, button) {
+                const element = document.getElementById(elementId);
+                element.select();
+                document.execCommand("copy");
+
+                const originalText = button.textContent;
+                button.textContent = "Copied!";
+                button.classList.add("copied");
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove("copied");
+                }, 2000);
+            }
+            function openLink(elementId, button) {
+                const element = document.getElementById(elementId);
+                element.select();
+                window.open(element.value, "_blank");
+            }
+            function copyBadge(format) {
+                if (format === "markdown") {
+                    navigator.clipboard.writeText(
+                        "[![Alt text](https://badgers.space/badge/License/MuPL?theme=honey&color=pink)](https://mupl.itoj.dev)"
+                    );
+                } else {
+                    navigator.clipboard.writeText(
+                        '<a href="https://mupl.itoj.dev" rel="noopener" target="_blank"><img src="https://badgers.space/badge/License/MuPL?theme=honey&color=pink"/></a>'
+                    );
+                }
+            }
+
+            document.getElementById("year").value = new Date().getFullYear();
+        </script>
+    </body>
+</html>
